@@ -1,0 +1,10 @@
+name: EnhancedRegions
+version: ${project.version}
+main: com.thed4nm4n.enhancedregions.EnhancedRegions
+api-version: 1.17
+authors: [ TheD4nM4n ]
+description: Enhanced region capabilities for WorldGuard regions.
+website: github.com/TheD4nM4n
+depend:
+  - WorldGuard
+  - WorldGuardEvents
