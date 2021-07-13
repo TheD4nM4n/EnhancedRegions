@@ -1,4 +1,4 @@
-# EnhancedRegions | Add functionality to WorldGuard regions
+# EnhancedRegions | Added functionality for WorldGuard regions
 
 EnhancedRegions adds new functionality to your WorldGuard regions, including keep inventory, teleporting upon region
 enter, and custom messages upon teleport. This software is a work in progress, and not all functionality is complete or
