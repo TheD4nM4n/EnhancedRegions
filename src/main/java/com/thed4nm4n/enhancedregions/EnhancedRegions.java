@@ -18,8 +18,10 @@ package com.thed4nm4n.enhancedregions;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.Flag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.StringFlag;
+import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -42,8 +44,10 @@ import java.util.logging.Logger;
 public final class EnhancedRegions extends JavaPlugin implements Listener {
 
     public static StateFlag keepInventory;
+    public static StateFlag dropExperience;
     public static LocationFlag teleportCoordinates;
     public static StringFlag teleportMessage;
+
     public static Logger logger;
 
     public void onLoad() {
@@ -65,14 +69,17 @@ public final class EnhancedRegions extends JavaPlugin implements Listener {
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
 
         StateFlag keepInvFlag = new StateFlag("keep-inventory", false);
+        StateFlag dropExpFlag = new StateFlag("drop-experience", false);
         LocationFlag teleportCoordinatesFlag = new LocationFlag("teleport-coordinates", null);
         StringFlag teleportMessageFlag = new StringFlag("message-on-teleport");
 
         registry.register(keepInvFlag);
+        registry.register(dropExpFlag);
         registry.register(teleportCoordinatesFlag);
         registry.register(teleportMessageFlag);
 
         keepInventory = keepInvFlag;
+        dropExperience = dropExpFlag;
         teleportCoordinates = teleportCoordinatesFlag;
         teleportMessage = teleportMessageFlag;
 
@@ -87,26 +94,14 @@ public final class EnhancedRegions extends JavaPlugin implements Listener {
         What this method does:
 
         Registers events with Bukkit's plugin manager.
-
-        Sends log messages confirming event registrations and a successful enabling of the plugin.
          */
 
         Bukkit.getPluginManager().registerEvents(this, this);
 
         logger.info("Listener events registered.");
-        logger.info("Enabled EnhancedRegions.");
     }
 
-    public void onDisable() {
-
-        /*
-        What this method does:
-
-        Sends log message confirming plugin disable.
-         */
-
-        logger.info("Disabled EnhancedRegions.");
-    }
+    public void onDisable() {}
 
     @EventHandler
     public void keepInventoryFlagHandler(PlayerDeathEvent event) {
@@ -138,6 +133,40 @@ public final class EnhancedRegions extends JavaPlugin implements Listener {
                     event.setKeepInventory(true);
                     event.setKeepLevel(true);
                     event.getDrops().clear();
+
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void dropExperienceFlagHandler(PlayerDeathEvent event) {
+
+        /*
+        What this method does:
+
+        Gets player and their location.
+
+        Gets region container and all regions within the current world.
+
+        Cycles through all applicable regions and checks if any of them has the "keep-inventory" flag set to ALLOW.
+
+        If one does, it will set keep inventory to true, set keep level to true, and clear all drops.
+         */
+
+        Player player = event.getEntity();
+        Location loc = player.getLocation();
+
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        RegionManager regions = container.get(BukkitAdapter.adapt(player.getWorld()));
+
+        if (regions != null) {
+
+            for (ProtectedRegion r : regions.getApplicableRegions(BlockVector3.at(loc.getX(), loc.getY(), loc.getZ()))) {
+
+                if (Objects.equals(r.getFlag((dropExperience)), StateFlag.State.DENY)) {
+
+                    event.setDroppedExp(0);
 
                 }
             }

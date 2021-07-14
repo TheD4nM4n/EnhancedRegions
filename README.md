@@ -1,8 +1,8 @@
 # EnhancedRegions | Added functionality for WorldGuard regions
 
 EnhancedRegions adds new functionality to your WorldGuard regions, including keep inventory, teleporting upon region
-enter, and custom messages upon teleport. This software is a work in progress, and not all functionality is complete or
-stable.
+enter, custom messages upon teleport, and more. This software is a work in progress, and not all functionality is
+complete or stable.
 
 ## Installing EnhancedRegions
 
@@ -13,14 +13,16 @@ stable.
 3. Profit!
 
 ## Using EnhancedRegions
-EnhancedRegions utilizes custom WorldGuard region flags to make setup as painless as possible. There are currently three
+EnhancedRegions utilizes custom WorldGuard region flags to make setup as painless as possible. There are currently four
 custom flags introduced with this plugin:
 
 |         Flag         |                                   Description                                   |   Type   |
 | -------------------- | ------------------------------------------------------------------------------- | :------: |
 | keep-inventory       | When enabled, any player who dies within this region will not lose their items. |   State  |
+| drop-experience      | When disabled, disables experience drops for player deaths in the region.       |   State  |
 | teleport-coordinates | Coordinates to teleport players to upon entering the region.                    | Location |
 | message-on-teleport  | Message to send to players when teleported after entering the region.           |  String  |
+
 
 To learn how to use these flags, check out
 [WorldGuard's documentation](https://worldguard.enginehub.org/en/latest/regions/flags/).
